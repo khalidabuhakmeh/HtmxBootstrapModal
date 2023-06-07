@@ -1,0 +1,16 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <button hx-get hx-page="Index" 
+            hx-page-handler="Modal"
+            hx-target="#modal-container">
+        Show Modal
+    </button>
+</div>
+
+<div id="modal-container"></div>
