@@ -1,14 +1,3 @@
 @model IndexModel
 
-<div class="modal-header">
-    <h5 class="modal-title">From The Server</h5>
-    <button type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            onclick="this.closest('.modal-group').remove()">
-    </button>
-</div>
-<div id="modal-body" class="modal-body">
-    <strong>You Said: "@Model.Message"</strong>
-</div>
+<strong>You Said: "@Model.Message"</strong>
