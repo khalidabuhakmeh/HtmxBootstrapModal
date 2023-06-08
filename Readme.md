@@ -33,72 +33,66 @@ What does the modal HTML look like?
 
 ### 2. Modal HTML
 
-The modal uses Bootstrap and some of the CSS required to make it behave appropriately. That said, you might want to use the JavaScript provided by Boostrap and process the modal using HTMX JavaScript. I find the approach in this sample to be easier as HTMX automatically processes HTML from the server to register events and triggers.
+The modal uses Bootstrap and some of the CSS and JavaScript required to make it behave appropriately. 
 
 Below is the markup found in `Shared/Modal.cshtml`.
 
 ```html
-<div class="modal-group">
-    <div class="modal show fade" tabindex="-1" style="display:block">
-        <div class="modal-dialog modal-dialog-centered">
-            <div id="modal-body" class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">From The Server</h5>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            onclick="this.closest('.modal-group').remove()">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="myForm" hx-post
-                          hx-page="index"
-                          hx-page-handler="Modal"
-                          hx-target="#modal-body">
-                        <div class="mb-3">
-                            <label asp-for="Message" class="form-label"></label>
-                            <input asp-for="Message" class="form-control" placeholder="Your message...">
-                        </div>
-                        @Html.AntiForgeryToken()
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button form="myForm"
-                            type="submit"
-                            class="btn btn-primary">
-                        Save changes
-                    </button>
-                </div>
+@model IndexModel
+
+<div id="my-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div id="modal-body" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">From The Server</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="myForm" hx-post
+                      hx-page="index"
+                      hx-page-handler="Modal"
+                      hx-target="closest .modal-body">
+                    <div class="mb-3">
+                        <label asp-for="Message" class="form-label"></label>
+                        <input asp-for="Message" class="form-control" placeholder="Your message...">
+                    </div>
+                    @Html.AntiForgeryToken()
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button form="myForm"
+                        type="submit"
+                        class="btn btn-primary">
+                    Save changes
+                </button>
             </div>
         </div>
     </div>
-    <div class="modal-backdrop fade show"></div>
 </div>
+<script>
+    function showModal() {
+        const modal = new bootstrap.Modal('#my-modal');
+        modal.show();
+    }
+    // scopes the modal so we can keep creating them
+    showModal();
+</script>
 ```
-Note the following aspects:
 
-1. We need `display:block` on the element. Without this, the modal won't be visible.
-2. The `submit` button uses the `form` attribute to trigger the HTMX-powered form.
-3. We're going to replace the entire contents of the modal
+Note that the `<script>` tag will be executed as soon as the HTML block is added to the DOM.
 
 ### 3. Modal Response
 
 When we get a response from ASP.NET Core, the HTML echoes back our message.
 
 ```html
-<div class="modal-header">
-    <h5 class="modal-title">From The Server</h5>
-    <button type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            onclick="this.closest('.modal-group').remove()">
-    </button>
-</div>
-<div id="modal-body" class="modal-body">
-    <strong>You Said: "@Model.Message"</strong>
-</div>
+@model IndexModel
+
+<strong>You Said: "@Model.Message"</strong>
 ```
 
 ## Conclusion
